@@ -1,2 +1,5 @@
 # instagram-nodejs
-Instagram Client with nodejs
+Nodejs Client for Instagram API http://instagram.com/developers/
+
+Under Development
+
