@@ -91,7 +91,72 @@ instagram.prototype.usersSearch = function(param){
 	return this.connect('users/search', 'GET');
 }
 
+instagram.prototype.usersFollows = function(userId){
+	return this.connect('users/'+userId+'/follows', 'GET');
+}
  
+instagram.prototype.usersFollowedBy = function(userId){
+	return this.connect('users/'+userId+'/followed-by', 'GET');
+}
+
+instagram.prototype.usersSelfRequestedBy = function(){
+	return this.connect('/users/self/requested-by', 'GET');
+}
+
+instagram.prototype.usersGetRelationship = function(userId){
+	return this.connect('/users/'+userId+'/relationship', 'GET');
+}
+
+instagram.prototype.usersPostRelationship = function(userId){
+	return this.connect('/users/'+userId+'/relationship', 'POST');
+}
+
+//media comment
+instagram.prototype.mediaGetComment = function(mediaId){
+	return this.connect('/media/'+mediaId+'/comment', 'GET');
+}
+instagram.prototype.mediaPostComment = function(mediaId){
+	return this.connect('/media/'+mediaId+'/comment', 'POST');
+}
+instagram.prototype.mediaDelComment = function(mediaId){
+	return this.connect('/media/'+mediaId+'/comment', 'DELETE');
+}
+
+//media likes
+instagram.prototype.mediaGetLikes = function(mediaId){
+	return this.connect('/media/'+mediaId+'/likes', 'GET');
+}
+instagram.prototype.mediaPostLikes = function(mediaId){
+	return this.connect('/media/'+mediaId+'/likes', 'POST');
+}
+instagram.prototype.mediaDelLikes = function(mediaId){
+	return this.connect('/media/'+mediaId+'/likes', 'DELETE');
+}
+
+
+//tags
+instagram.prototype.tags = function(tagName){
+	return this.connect('/tags/'+tagName, 'GET');
+}
+instagram.prototype.tagsMediaRecent = function(tagName){
+	return this.connect('/tags/'+tagName+'/media/recent', 'GET');
+}
+instagram.prototype.tagsSearch = function(q){
+	return this.connect('/tags/q?'+q, 'GET');
+}
+
+
+//location
+instagram.prototype.location = function(locationId){
+	return this.connect('/location/'+locationId, 'GET');
+}
+instagram.prototype.locationMediaRecent = function(locationId){
+	return this.connect('/location/'+locationId+'/media/recent', 'GET');
+}
+instagram.prototype.locationSearch= function(lat,lng){
+	return this.connect('/location/search?lat='+lat+'&lng='+lng, 'GET');
+}
+
 exports.init = function(token, param){
 	return new instagram(token);
 }
