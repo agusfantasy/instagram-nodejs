@@ -1,9 +1,8 @@
-# instagram-nodejs
-Nodejs Client for Instagram API http://instagram.com/developers/
 
-instagram-nodejs
+Instagram-nodejs
 ======
 Nodejs client for the Instagram REST and Search APIs
+Please read documentation from officical instagram http://instagram.com/developers/
 
 Installation
 -----
