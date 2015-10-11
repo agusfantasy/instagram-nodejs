@@ -6,7 +6,6 @@ Please read documentation from officical instagram http://instagram.com/develope
 
 Installation
 -----
-```
 npm install git@github.com:agusfantasy/instagram-nodejs.git
 
 Authentication
