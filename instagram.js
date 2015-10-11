@@ -9,11 +9,11 @@ var instagram = function(token){
 
 var responseBody;
 
-instagram.prototype.connect = function(patho, method){
+instagram.prototype.connect = function(path, method){
 
 	var options = {
 		hostname: apiUrl,
-		path: '/'+version+patho+'?access_token='+this.access_token,
+		path: '/'+version+path+'?access_token='+this.access_token,
 		//port: 443,
 		method: method,
 		headers:{
@@ -46,7 +46,12 @@ instagram.prototype.connect = function(patho, method){
 	return responseBody;
 }
 
-/*
+//Single function to call all endpoint
+instagram.prototype.endpoint = function(path, method){
+	return this.connect(path, method);
+}
+
+/**
 * Instagram Media Endpoints
 * API Documentation: https://instagram.com/developer/endpoints/media
 */
@@ -142,7 +147,7 @@ instagram.prototype.tagsMediaRecent = function(tagName){
 	return this.connect('/tags/'+tagName+'/media/recent', 'GET');
 }
 instagram.prototype.tagsSearch = function(q){
-	return this.connect('/tags/q?'+q, 'GET');
+	return this.connect('/tags?q='+q, 'GET');
 }
 
 
