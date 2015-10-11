@@ -41,8 +41,6 @@ Data Retrieval:
 -----
 
 See the endpoints docs for more on these methods: http://instagr.am/developer/endpoints/
-
-Users: http://instagr.am/developer/endpoints/users/
     
 ``` javascript
 var ins = instagram.init('YOUR_ACCESS_TOKEN');
