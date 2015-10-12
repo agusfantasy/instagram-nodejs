@@ -1,157 +1,134 @@
-var https = require('https');
+var rp = require('request-promise');
 
-var apiUrl = 'api.instagram.com';
+var apiUrl = 'https://api.instagram.com/';
 var version = 'v1';
-
-var instagram = function(token){
+   
+var Instagram = function(token){
 	this.access_token = token;
 }
 
-var responseBody = "";
-
-instagram.prototype.connect = function(path, method, param){
-
-	var params = (param != undefined) ? param : '';
+Instagram.prototype.option = function(path, method, params){
 	
-	var options = {
-		hostname: apiUrl,
-		path: '/'+version+path+'?access_token='+this.access_token+ params,
-		method: method,
-		headers:{
-			'Content-Type': 'application/json'
-		}
+	var query = '?access_token='+this.access_token; 
+
+	if (params != undefined) {
+		query += params;
 	}
 
-	var req = https.request(options, function(res){
-		
-		var body = ""; 
-		res.on('data', function(chunk) {
-	    	body += chunk;
-	  	});
-	  	res.on('end', function() {
-	    	responseBody = body;
-  		});	
-  		
-	});
+	var options = {
+		method: method,
+	    uri: apiUrl+version+path+query,
+	    headers: {
+	        'User-Agent': 'Request-Promise',
+	        'Accept' : 'application/json'
+	    },
+	    resolveWithFullResponse: true,
+	    json: true
+	};
 
-	req.end();
+	return options;
+}
 
-	req.on('error', function(e) {
-		responseBody = e;
-	});
-
-	return responseBody;
+Instagram.prototype.connect = function(path, method){
+	return rp(this.option(path, method));
 }
 
 /**
 * Instagram Media Endpoints
 * API Documentation: https://instagram.com/developer/endpoints/media
 */
-instagram.prototype.media = function(id){
-	return this.connect('/media/'+id, 'GET');
+Instagram.prototype.media = function(id){
+	return rp(this.option('/media/'+id, 'GET'));
 }
-
-instagram.prototype.mediaShortcode = function(code){
-	return this.connect('/media/shortcode/'+code, 'GET');
+Instagram.prototype.mediaShortcode = function(code){
+	return rp(this.option('/media/shortcode/'+code, 'GET'));
 }
-
-instagram.prototype.mediaSearch = function(lat, lng){
-	return this.connect('/media/search', 'GET', '&lat=' +lat+ '&lng=' +lng);
+Instagram.prototype.mediaSearch = function(lat, lng){
+	return rp(this.option('/media/search', 'GET', '&lat='+lat+'&lng='+lng));
 }
-
-instagram.prototype.mediaPopular = function(){
-	return this.connect('/media/popular', 'GET');
+Instagram.prototype.mediaPopular = function(){
+	return rp(this.option('/media/popular', 'GET'));
 }
 
 /*
 * Instagram User Endpoints
 * API Documentation: https://instagram.com/developer/endpoints/users
 */
-instagram.prototype.users = function(userId){
-	return this.connect('/media/'+userId, 'GET');
+Instagram.prototype.users = function(userId){
+	return rp(this.option('/users/'+userId, 'GET'));
 }
-
-instagram.prototype.usersSelfFeed = function(max_id){
-	return this.connect('/users/self/feed', 'GET');
+Instagram.prototype.usersSelfFeed = function(maxId){
+	return rp(this.option('/users/self/feed', 'GET', '&max_id='+maxId));
 }
-
-instagram.prototype.usersMediaRecent = function(userId){
-	return this.connect('/users/'+userId+'/media/recent', 'GET');
+Instagram.prototype.usersMediaRecent = function(userId, maxId){
+	return rp(this.option('/users/'+userId+'/media/recent', 'GET', '&max_id='+maxId));
 }
-
-instagram.prototype.usersSelfMediaLiked = function(){
-	return this.connect('/users/self/media/liked', 'GET');
+Instagram.prototype.usersSelfMediaLiked = function(maxId){
+	return rp(this.option('/users/self/media/liked', 'GET', '&max_id='+maxId));
 }
-
-instagram.prototype.usersSearch = function(q){
-	return this.connect('/users/search', 'GET', '&q=' +q);
+Instagram.prototype.usersSearch = function(q){
+	return rp(this.option('/users/search', 'GET', '&q='+q));
 }
-
-instagram.prototype.usersFollows = function(userId){
-	return this.connect('/users/'+userId+'/follows', 'GET');
+Instagram.prototype.usersFollows = function(userId){
+	return rp(this.option('/users/'+userId+'/follows', 'GET'));
 }
- 
-instagram.prototype.usersFollowedBy = function(userId){
-	return this.connect('/users/'+userId+'/followed-by', 'GET');
+Instagram.prototype.usersFollowedBy = function(userId){
+	return rp(this.option('/users/'+userId+'/followed-by', 'GET'));
 }
-
-instagram.prototype.usersSelfRequestedBy = function(){
-	return this.connect('/users/self/requested-by', 'GET');
+Instagram.prototype.usersSelfRequestedBy = function(){
+	return rp(this.option('/users/self/requested-by', 'GET'));
 }
-
-instagram.prototype.usersGetRelationship = function(userId){
-	return this.connect('/users/'+userId+'/relationship', 'GET');
+Instagram.prototype.usersGetRelationship = function(userId){
+	return rp(this.option('/users/'+userId+'/relationship', 'GET'));
 }
-
-instagram.prototype.usersPostRelationship = function(userId){
-	return this.connect('/users/'+userId+'/relationship', 'POST');
+Instagram.prototype.usersPostRelationship = function(userId){
+	return rp(this.option('/users/'+userId+'/relationship', 'POST'));
 }
 
 //media comment
-instagram.prototype.mediaGetComment = function(mediaId){
-	return this.connect('/media/'+mediaId+'/comment', 'GET');
+Instagram.prototype.mediaGetComment = function(mediaId){
+	return rp(this.option('/media/'+mediaId+'/comment', 'GET'));
 }
-instagram.prototype.mediaPostComment = function(mediaId, data){
-	return this.connect('/media/'+mediaId+'/comment', 'POST', data);
+Instagram.prototype.mediaPostComment = function(mediaId, data){
+	return rp(this.option('/media/'+mediaId+'/comment', 'POST', data));
 }
-instagram.prototype.mediaDelComment = function(mediaId){
-	return this.connect('/media/'+mediaId+'/comment', 'DELETE');
+Instagram.prototype.mediaDelComment = function(mediaId){
+	return rp(this.option('/media/'+mediaId+'/comment', 'DELETE'));
 }
 
 //media likes
-instagram.prototype.mediaGetLikes = function(mediaId){
-	return this.connect('/media/'+mediaId+'/likes', 'GET');
+Instagram.prototype.mediaGetLikes = function(mediaId){
+	return rp(this.option('/media/'+mediaId+'/likes', 'GET'));
 }
-instagram.prototype.mediaPostLikes = function(mediaId){
-	return this.connect('/media/'+mediaId+'/likes', 'POST');
+Instagram.prototype.mediaPostLikes = function(mediaId){
+	return rp(this.option('/media/'+mediaId+'/likes', 'POST'));
 }
-instagram.prototype.mediaDelLikes = function(mediaId){
-	return this.connect('/media/'+mediaId+'/likes', 'DELETE');
+Instagram.prototype.mediaDelLikes = function(mediaId){
+	return rp(this.option('/media/'+mediaId+'/likes', 'DELETE'));
 }
-
 
 //tags
-instagram.prototype.tags = function(tagName){
-	return this.connect('/tags/'+tagName, 'GET');
+Instagram.prototype.tags = function(tagName){
+	return rp(this.option('/tags/'+tagName, 'GET'));
 }
-instagram.prototype.tagsMediaRecent = function(tagName){
-	return this.connect('/tags/'+tagName+'/media/recent', 'GET');
+Instagram.prototype.tagsMediaRecent = function(tagName, maxId){
+	return rp(this.option('/tags/'+tagName+'/media/recent', 'GET', '&max_id='+maxId));
 }
-instagram.prototype.tagsSearch = function(q){
-	return this.connect('/tags/search', 'GET', '&q=' +q);
+Instagram.prototype.tagsSearch = function(q){
+	return rp(this.option('/tags/search', 'GET', '&q='+q));
 }
 
 //location
-instagram.prototype.location = function(locationId){
-	return this.connect('/location/'+locationId, 'GET');
+Instagram.prototype.location = function(locationId){
+	return rp(this.option('/location/'+locationId, 'GET'));
 }
-instagram.prototype.locationMediaRecent = function(locationId){
-	return this.connect('/location/'+locationId+'/media/recent', 'GET');
+Instagram.prototype.locationMediaRecent = function(locationId){
+	return rp(this.option('/location/'+locationId+'/media/recent', 'GET'));
 }
-instagram.prototype.locationSearch = function(lat, lng){
-	return this.connect('/location/search', 'GET', '&lat='+lat+'&lng='+lng);
+Instagram.prototype.locationSearch = function(lat, lng){
+	return rp(this.option('/location/search', 'GET', '&lat='+lat+'&lng='+lng));
 }
 
 exports.init = function(token){
-	return new instagram(token);
+	return new Instagram(token);
 }

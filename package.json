@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-instagram",
+  "name": "instagram-nodejs",
   "version": "0.0.1",
   "description": "Instagram CLient nodejs",
   "main": "index.js",

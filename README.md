@@ -45,6 +45,16 @@ See the endpoints docs for more on these methods: http://instagr.am/developer/en
 ``` javascript
 var ins = instagram.init('YOUR_ACCESS_TOKEN');
 
+ins.{method(param)}
+	.then(function(response){
+		//response;
+	})
+	.catch(function(err){
+		//err;
+	}))
+
+//Method Name List	
+
 //Media
 ins.media(media_id)
 ins.mediaShortcode();
